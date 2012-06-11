@@ -8,22 +8,23 @@ module NginHttp
 	    request_queue.run
 	    
 	    request_queue.requests.each do |req|
-	    	if req.response.success?
-	      	parse_response req
-	    	end
+	    	parse_response req
 	    end
 	  end
 
 	  private 
 
-	  #TODO: add error handling
 	  def parse_response(req)
 	  	varname = "@" + req.name.to_s
-      response_body = JSON.parse(req.response.body)
-      if response_body.is_a? Array
-      	parse_array(varname, req, response_body)
+	  	if req.response.success?
+      	response_body = JSON.parse(req.response.body)
+      	if response_body.is_a? Array
+      		parse_array(varname, req, response_body)
+      	else
+      		parse_single_obj(varname, req, response_body)
+      	end
       else
-      	parse_single_obj(varname, req, response_body)
+      	assign_request_error(varname, req)
       end
 	  end
 
@@ -36,6 +37,12 @@ module NginHttp
 
 	  def parse_single_obj(varname, req, content)
 	  	req.target.instance_variable_set(varname.to_sym, req.klass.new(content))
+	  end
+
+	   def assign_request_error(varname, req)
+	  	obj = req.klass.new
+	  	obj.resource_exception = Exception.new("Could not retrieve data from remote service") #TODO: more specific errors
+	  	req.target.instance_variable_set(varname.to_sym, obj)
 	  end
 	end
 end

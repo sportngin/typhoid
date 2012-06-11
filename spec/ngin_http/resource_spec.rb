@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 describe NginHttp::Resource do
 
 	it "should have fields defined" do
-		game = Game.new(nil)
+		game = Game.new
 		game.should respond_to(:team_1_name)
 	end
 

@@ -4,8 +4,9 @@ module NginHttp
 
 	module Resource
 	
-		def initialize(params)
-			params ||= {}
+		attr_accessor :resource_exception
+
+		def initialize(params = {})
 			self.class.auto_init_fields.each do |f|
 				self.send "#{f}=", params[f.to_s]	
 			end
