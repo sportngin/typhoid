@@ -1,6 +1,8 @@
 module NginHttp
   class RequestBuilder
 
+
+
   	attr_accessor :klass
 
   	def initialize(klass, uri, options = {})
