@@ -52,19 +52,5 @@ describe NginHttp::Io do
 			end
 		end
 
-		context "making a standalone get request" do
-
-			it "should make a request and instantiate a ruby object" do
-				hydra = Typhoeus::Hydra.hydra
-				game_response = Typhoeus::Response.new(:code => 200, :headers => "", :body => {"team_1_name" => "Bears"}.to_json, :time => 0.03)
-				hydra.stub(:get, "http://localhost:3000/games/1").and_return(game_response)
-
-				
-				game = Game.fetch(Game.get_game)
-				game.class.should eql Game
-				game.team_1_name.should eql 'Bears'
-
-			end
-
-		end
+		
 end
