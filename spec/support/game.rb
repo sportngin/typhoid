@@ -1,7 +1,6 @@
 require 'ngin_http'
 
-class Game
-  include NginHttp::Resource
+class Game < NginHttp::Resource
 
   field :id
   field :team_1_name

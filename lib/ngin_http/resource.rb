@@ -2,7 +2,7 @@ require 'cgi'
 
 module NginHttp
 
-	module Resource
+	class Resource
 
 		include NginHttp::Io
 
@@ -14,19 +14,16 @@ module NginHttp
 		end
 
 		def save!
-			if new_record?
-				NginHttp::Io.save(self, save_http_method, save_request)
-			end
-		end
+  		response = Typhoeus::Request.send save_http_method, save_request.request_uri, save_request.options
+  		NginHttp::Resource.load_values(self, response)
+	  end
 
-
-		def self.included(base)
-			base.extend ClassMethods
-		end
+	  def destroy!
+	   	#parse(request.klass, Typhoeus::Request.delete(request.request_uri, request.options))
+	 	end
 
 		def save_request
 			(new_record?) ? create_request : update_request
-
 		end
 
 		def save_http_method
@@ -43,29 +40,33 @@ module NginHttp
 			end
 		end
 
+
+
 		protected
-
-
 
 		def new_record?
 			id.nil?
 		end
 
-		def create_request
+		def create_request(method = :post)
+			NginHttp::RequestBuilder.new(self.class, request_uri, :params => field_values_as_hash, :method => method)
+		end
+
+		def update_request(method = :put)
+			NginHttp::RequestBuilder.new(self.class, request_uri, :params => field_values_as_hash, :method => method)
+		end
+
+		def field_values_as_hash
 			params = {}
 			self.class.auto_init_fields.each do |f|
 				params[f.to_s] = self.send "#{f}"
 			end
-			NginHttp::RequestBuilder.new(self.class, request_uri, :params => params, :method => save_http_method)
-		end
-
-		def update_request
-
 		end
 
 
+		public 
 
-		module ClassMethods
+		class << self
 
 			def field(field_name)
 				attr_accessor field_name.to_sym
@@ -82,8 +83,8 @@ module NginHttp
 			end
 
 	  	def fetch(request)
-	  		NginHttp::Io.fetch(request)
-	  	end
+  			parse(request.klass, Typhoeus::Request.get(request.request_uri, request.options))
+  		end
 
 	  	def site=(value)
 	  		@@site = value
@@ -100,6 +101,52 @@ module NginHttp
 	  	def path
 	  		@@path
 	  	end
+
+	  	def parse(klass, response)
+				if response.success?
+	    		response_body = JSON.parse(response.body)
+	    		if response_body.is_a? Array
+	    			parse_array(klass, response_body)
+	    		else
+
+	    			parse_single_obj(klass, response_body)
+	    		end
+	    	else
+	    		assign_request_error(klass)
+	    	end
+			end
+
+			def load_values(obj, response)
+		  	if response.success?
+		  		response_body = JSON.parse(response.body)
+		  		obj.load_values(response_body)
+		  	else
+		  		assign_request_error(obj.class, obj)
+		  	end
+		  end
+
+	  	private
+
+
+		  def parse_array(klass, content)
+		  	values = []
+	      content.each do |obj|
+	      	values << klass.new(obj) 
+	      end
+	      values
+		  end
+
+
+
+		  def parse_single_obj(klass, content)
+		  	klass.new(content)
+		  end
+
+		  def assign_request_error(klass, obj = nil)
+		  	obj ||= klass.new
+		  	obj.resource_exception = Exception.new("Could not retrieve data from remote service") #TODO: more specific errors
+		  	obj
+		  end
 
 	  	
 		end

@@ -1,7 +1,6 @@
 require 'ngin_http'
 
-class PlayerStat
-	include NginHttp::Resource
+class PlayerStat < NginHttp::Resource
 
 	field :player_name
 	field :goals
