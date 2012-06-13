@@ -13,5 +13,7 @@ describe NginHttp::Resource do
 		game.team_1_name.should eql 'Bears'
 		game.start_time.should be_nil
 	end
+
+
 end
 

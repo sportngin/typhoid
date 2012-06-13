@@ -3,6 +3,9 @@ require 'cgi'
 module NginHttp
 
 	module Resource
+
+		include NginHttp::Io
+
 	
 		attr_accessor :resource_exception
 
@@ -30,7 +33,14 @@ module NginHttp
 			def build_request(uri, options = {})
 				NginHttp::RequestBuilder.new(self, uri, options)
 			end
+
+	  	def fetch(request)
+	  		NginHttp::Io.fetch(request)
+	  	end
+	  
 		end
+
+		
 
 	end
 end
