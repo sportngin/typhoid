@@ -1,6 +1,6 @@
-require 'ngin_http'
+require 'typhoid'
 
-class Game < NginHttp::Resource
+class Game < Typhoid::Resource
 
   field :id
   field :team_1_name

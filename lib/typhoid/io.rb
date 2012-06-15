@@ -1,5 +1,5 @@
-module NginHttp
-	module Io
+module Typhoid
+	module Multi
 
 		def remote_resources(hydra = nil)
 	    request_queue = RequestQueue.new(self, hydra)
@@ -16,7 +16,7 @@ module NginHttp
 
 	  def parse_queued_response(req)
 		  	varname = "@" + req.name.to_s
-		  	req.target.instance_variable_set varname.to_sym, NginHttp::Resource.parse(req.klass, req.response)
+		  	req.target.instance_variable_set varname.to_sym, Typhoid::Resource.parse(req.klass, req.response)
 		  end
 
 	end

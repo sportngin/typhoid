@@ -1,6 +1,6 @@
 require 'typhoeus'
 
-module NginHttp
+module Typhoid
   class RequestQueue
     
     attr_reader :queue

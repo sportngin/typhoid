@@ -1,6 +1,6 @@
-require 'ngin_http'
+require 'typhoid'
 
-class PlayerStat < NginHttp::Resource
+class PlayerStat < Typhoid::Resource
 
 	field :player_name
 	field :goals

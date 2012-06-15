@@ -1,5 +1,5 @@
-require 'ngin_http'
+require 'typhoid'
 
 class Controller
-	include NginHttp::Io
+	include Typhoid::Multi
 end

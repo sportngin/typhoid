@@ -1,10 +1,10 @@
 require 'cgi'
 
-module NginHttp
+module Typhoid
 
 	class Resource
 
-		include NginHttp::Io
+		include Typhoid::Multi
 
 	
 		attr_accessor :resource_exception
@@ -15,7 +15,7 @@ module NginHttp
 
 		def save!
   		response = Typhoeus::Request.send save_http_method, save_request.request_uri, save_request.options
-  		NginHttp::Resource.load_values(self, response)
+  		Typhoid::Resource.load_values(self, response)
 	  end
 
 	  def destroy!
@@ -49,11 +49,11 @@ module NginHttp
 		end
 
 		def create_request(method = :post)
-			NginHttp::RequestBuilder.new(self.class, request_uri, :params => field_values_as_hash, :method => method)
+			Typhoid::RequestBuilder.new(self.class, request_uri, :params => field_values_as_hash, :method => method)
 		end
 
 		def update_request(method = :put)
-			NginHttp::RequestBuilder.new(self.class, request_uri, :params => field_values_as_hash, :method => method)
+			Typhoid::RequestBuilder.new(self.class, request_uri, :params => field_values_as_hash, :method => method)
 		end
 
 		def field_values_as_hash
@@ -79,7 +79,7 @@ module NginHttp
 			end
 
 			def build_request(uri, options = {})
-				NginHttp::RequestBuilder.new(self, uri, options)
+				Typhoid::RequestBuilder.new(self, uri, options)
 			end
 
 	  	def fetch(request)

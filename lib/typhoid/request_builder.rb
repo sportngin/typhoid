@@ -1,4 +1,4 @@
-module NginHttp
+module Typhoid
   class RequestBuilder
 
 

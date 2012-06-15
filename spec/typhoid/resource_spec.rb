@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
-describe NginHttp::Resource do
+describe Typhoid::Resource do
 
 	it "should have fields defined" do
 		game = Game.new
@@ -45,9 +45,27 @@ describe NginHttp::Resource do
 			game.id.should eql "1"
 			game.team_1_name.should eql "Bears"
 		end
-
-
 	end
+
+	context "handling bad requests" do
+			before(:each) do
+				@fake_hydra = Typhoeus::Hydra.new
+				bad_game = Typhoeus::Response.new(:code => 500, :headers => "")
+				@fake_hydra.stub(:get, "http://localhost:3000/games/1").and_return(bad_game)
+			end
+
+			it "should assign an exception object on a bad request" do
+				controller = Controller.new
+				controller.remote_resources(@fake_hydra) do |req|
+					req.resource(:game, Game.get_game)
+				end
+
+				bad_game = controller.instance_variable_get("@game")
+				bad_game.team_1_name.should be_nil
+				bad_game.resource_exception.class.should be_true 
+			end
+		end
+
 
 end
 

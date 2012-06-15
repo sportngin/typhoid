@@ -1,12 +1,12 @@
-# NginHttp
+# Typhoid
 
-TODO: Write a gem description
+A lightweight ORM-like wrapper around [Typhoeus](http://typhoeus.github.com/)
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'ngin_http'
+    gem 'typhoid'
 
 And then execute:
 
@@ -14,7 +14,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install ngin_http
+    $ gem install typhoid
 
 ## Usage
 

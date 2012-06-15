@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ngin_http (0.0.1)
+    typhoid (0.0.1)
       typhoeus
 
 GEM
@@ -26,5 +26,5 @@ PLATFORMS
 
 DEPENDENCIES
   json_pure (>= 1.4.1)
-  ngin_http!
+  typhoid!
   rspec

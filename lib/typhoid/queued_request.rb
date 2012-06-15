@@ -1,4 +1,4 @@
-module NginHttp
+module Typhoid
   class QueuedRequest
     attr_accessor :name, :request, :target, :klass
     attr_accessor :on_complete
