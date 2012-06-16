@@ -45,6 +45,27 @@ describe Typhoid::Resource do
 			game.id.should eql "1"
 			game.team_1_name.should eql "Bears"
 		end
+
+		it "should update an object" do
+			update_response = Typhoeus::Response.new(:code => 200, :headers => "", :body => {"team_1_name" => "Bears", "id" => "1"}.to_json)
+			@hydra.stub(:put, "http://localhost:3000/games/1").and_return(update_response)
+
+			game = Game.new("id" => 1, "team_1_name" => 'Tigers')
+			game.save!
+
+			game.resource_exception.should be nil
+			game.team_1_name.should eql "Bears"
+		end
+
+		it "should delete an object" do
+			@hydra.stub(:delete, "http://localhost:3000/games/1").and_return(@game_response)
+
+			game = Game.new("id" => 1, "team_1_name" => 'Tigers')
+			game.destroy!
+
+			game.resource_exception.should be nil
+			
+		end
 	end
 
 	context "handling bad requests" do

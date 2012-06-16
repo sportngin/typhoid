@@ -19,7 +19,8 @@ module Typhoid
 	  end
 
 	  def destroy!
-	   	#parse(request.klass, Typhoeus::Request.delete(request.request_uri, request.options))
+	  	response = Typhoeus::Request.delete(delete_request.request_uri, delete_request.options)
+	   	Typhoid::Resource.load_values(self, response)
 	 	end
 
 		def save_request
@@ -53,7 +54,14 @@ module Typhoid
 		end
 
 		def update_request(method = :put)
-			Typhoid::RequestBuilder.new(self.class, request_uri, :params => field_values_as_hash, :method => method)
+			uri = request_uri + self.id.to_s
+			body = field_values_as_hash
+			Typhoid::RequestBuilder.new(self.class, uri, :body => body.to_json,  :method => method, :headers => {"Content-Type" => 'application/json'})
+		end
+
+		def delete_request(method = :delete)
+			uri = request_uri + self.id.to_s
+			Typhoid::RequestBuilder.new(self.class, uri, :method => method)
 		end
 
 		def field_values_as_hash
@@ -61,6 +69,7 @@ module Typhoid
 			self.class.auto_init_fields.each do |f|
 				params[f.to_s] = self.send "#{f}"
 			end
+			params
 		end
 
 
