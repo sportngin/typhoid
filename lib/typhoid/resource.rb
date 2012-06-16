@@ -85,8 +85,6 @@ module Typhoid
 	  	def path
 	  		@@path
 	  	end
-
-	  # 	
 	  	
 		end
 

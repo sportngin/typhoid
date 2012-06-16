@@ -7,11 +7,17 @@ describe Typhoid::Resource do
 		game.should respond_to(:team_1_name)
 	end
 
-	it "should populate fields" do
+	it "should populate defined attributes" do
 		response_data = {"team_1_name" => 'Bears', "team_2_name" => 'Lions'}
 		game = Game.new(response_data)
 		game.team_1_name.should eql 'Bears'
 		game.start_time.should be_nil
+	end
+
+	it "should populate attributes" do
+		game = Game.new({"team_1_name" => 'Bears', "team_2_name" => 'Lions'})
+		game.read_attribute(:team_1_name).should eql 'Bears'
+		game[:team_2_name].should eql 'Lions'
 	end
 
 	it "should return the request path" do

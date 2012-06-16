@@ -1,11 +1,20 @@
 module Typhoid
 	module Attributes
 
+		attr_reader :attributes
+
 		def load_values(params)
+			params ||= {}
+			@attributes = params
 			self.class.auto_init_fields.each do |f|
 				self.send "#{f}=", params[f.to_s]	
 			end
 		end
+
+		def read_attribute(name)
+			attributes[name.to_s]
+		end
+		alias :[] :read_attribute
 
 		def self.included(base)
 			base.extend(ClassMethods)
