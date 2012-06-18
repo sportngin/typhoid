@@ -66,8 +66,9 @@ module Typhoid
 				Typhoid::RequestBuilder.new(self, uri, options)
 			end
 
-	  	def fetch(request)
-  			parse(request.klass, Typhoeus::Request.get(request.request_uri, request.options))
+	  	def run(request)
+	  		method = request.http_method
+  			parse(request.klass, (Typhoeus::Request.send method, request.request_uri, request.options))
   		end
 
 	  	def site=(value)

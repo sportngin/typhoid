@@ -36,7 +36,7 @@ describe Typhoid::Resource do
 		
 			@hydra.stub(:get, "http://localhost:3000/games/1").and_return(@game_response)
 
-			game = Game.fetch(Game.get_game)
+			game = Game.get_game.run
 			game.class.should eql Game
 			game.team_1_name.should eql 'Bears'
 

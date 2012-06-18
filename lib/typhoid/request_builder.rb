@@ -4,6 +4,7 @@ module Typhoid
 
 
   	attr_accessor :klass
+    attr_writer :method
 
   	def initialize(klass, uri, options = {})
   		@uri = uri
@@ -18,6 +19,14 @@ module Typhoid
   	def options
   		@request_options
   	end
+
+    def http_method
+      options[:method] || :get
+    end
+
+    def run
+      klass.run(self)
+    end
 
   end
 end
