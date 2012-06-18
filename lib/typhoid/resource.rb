@@ -14,8 +14,8 @@ module Typhoid
 			load_values(params)
 		end
 
-		def save!
-  		response = Typhoeus::Request.send save_http_method, save_request.request_uri, save_request.options
+		def save!(method = nil)
+  		response = Typhoeus::Request.send save_http_method(method), save_request.request_uri, save_request.options
   		Typhoid::Resource.load_values(self, response)
 	  end
 
@@ -28,8 +28,12 @@ module Typhoid
 			(new_record?) ? create_request : update_request
 		end
 
-		def save_http_method
-			(new_record?) ? :post : :put
+		def save_http_method(method = nil)
+			if method
+				method
+			else
+				(new_record?) ? :post : :put
+			end
 		end
 
 		def request_uri
@@ -49,7 +53,7 @@ module Typhoid
 
 		def update_request(method = :put)
 			uri = request_uri + self.id.to_s
-			Typhoid::RequestBuilder.new(self.class, uri, :body => attributes.to_json,  :method => method, :headers => {"Content-Type" => 'application/json'})
+			Typhoid::RequestBuilder.new(self.class, uri, :body => attributes.to_json, :method => method, :headers => {"Content-Type" => 'application/json'})
 		end
 
 		def delete_request(method = :delete)

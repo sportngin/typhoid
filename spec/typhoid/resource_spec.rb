@@ -72,6 +72,17 @@ describe Typhoid::Resource do
 			game.resource_exception.should be nil
 			
 		end
+
+		it "should be able to specify save http verb" do
+			update_response = Typhoeus::Response.new(:code => 200, :headers => "", :body => {"team_1_name" => "Bears", "id" => "1"}.to_json)
+			@hydra.stub(:post, "http://localhost:3000/games/1").and_return(update_response)
+
+			game = Game.new("id" => 1, "team_1_name" => 'Tigers')
+			game.save!(:post)
+
+			game.resource_exception.should be nil
+
+		end
 	end
 
 	context "handling bad requests" do
