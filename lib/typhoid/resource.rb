@@ -44,13 +44,12 @@ module Typhoid
 		end
 
 		def create_request(method = :post)
-			Typhoid::RequestBuilder.new(self.class, request_uri, :params => field_values_as_hash, :method => method)
+			Typhoid::RequestBuilder.new(self.class, request_uri, :params => attributes, :method => method)
 		end
 
 		def update_request(method = :put)
 			uri = request_uri + self.id.to_s
-			body = field_values_as_hash
-			Typhoid::RequestBuilder.new(self.class, uri, :body => body.to_json,  :method => method, :headers => {"Content-Type" => 'application/json'})
+			Typhoid::RequestBuilder.new(self.class, uri, :body => attributes.to_json,  :method => method, :headers => {"Content-Type" => 'application/json'})
 		end
 
 		def delete_request(method = :delete)

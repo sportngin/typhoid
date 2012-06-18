@@ -22,14 +22,6 @@ module Typhoid
 
 		protected
 
-		def field_values_as_hash
-			params = {}
-			self.class.auto_init_fields.each do |f|
-				params[f.to_s] = self.send "#{f}"
-			end
-			params
-		end
-
 		module ClassMethods
 			def field(field_name)
 				attr_accessor field_name.to_sym
