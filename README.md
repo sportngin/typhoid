@@ -1,5 +1,7 @@
 # Typhoid
 
+[![TravisCI](https://secure.travis-ci.org/tstmedia/typhoid.png "TravisCI")](http://travis-ci.org/tstmedia/typhoid "Travis-CI Typhoid")
+
 A lightweight ORM-like wrapper around [Typhoeus](http://typhoeus.github.com/)
 
 ## Installation
