@@ -12,6 +12,11 @@ describe Typhoid::Resource do
     Game.built_request_uri('1').should == "http://localhost:3000/games/1"
   end
 
+  it "doesn't mess with a full url" do
+    expected_url = 'http://some_other_url/games/1'
+    Game.built_request_uri(expected_url).should == expected_url
+  end
+
   it "should have fields defined" do
     game = Game.new
     game.should respond_to(:team_1_name)

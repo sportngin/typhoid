@@ -34,8 +34,12 @@ module Typhoid
     end
 
     def self.built_request_uri(path_or_query = nil)
-      path_or_query = path_or_query.gsub(/^\//, '') unless path_or_query.nil?
-      [base_request_uri, path_or_query].compact.join '/'
+      if path_or_query =~ /^http:\/\//i
+        path_or_query
+      else
+        path_or_query = path_or_query.gsub(/^\//, '') unless path_or_query.nil?
+        [base_request_uri, path_or_query].compact.join '/'
+      end
     end
 
     def initialize(params = {})
