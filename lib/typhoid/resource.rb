@@ -5,7 +5,20 @@ module Typhoid
     include Typhoid::Multi
     include Typhoid::Attributes
 
+    class << self
+      attr_accessor :site, :path
+    end
+
     attr_accessor :resource_exception
+
+    def self.build_request(uri, options = {})
+      Typhoid::RequestBuilder.new(self, uri, options)
+    end
+
+    def self.run(request)
+      method = request.http_method
+      parse(request.klass, (Typhoeus::Request.send method, request.request_uri, request.options))
+    end
 
     def initialize(params = {})
       load_values(params)
@@ -55,35 +68,6 @@ module Typhoid
     def delete_request(method = :delete)
       uri = request_uri + self.id.to_s
       Typhoid::RequestBuilder.new(self.class, uri, :method => method)
-    end
-
-    public
-
-    class << self
-      def build_request(uri, options = {})
-        Typhoid::RequestBuilder.new(self, uri, options)
-      end
-
-      def run(request)
-        method = request.http_method
-        parse(request.klass, (Typhoeus::Request.send method, request.request_uri, request.options))
-      end
-
-      def site=(value)
-        @@site = value
-      end
-
-      def site
-        @@site
-      end
-
-      def path=(value)
-        @@path = value
-      end
-
-      def path
-        @@path
-      end
     end
   end
 end
