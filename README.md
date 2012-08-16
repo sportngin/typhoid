@@ -20,12 +20,31 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Class Setup
+
+```ruby
+require 'typhoid'
+
+class Game < Typhoid::Resource
+  field :id           # What fields we want to deal with on a response/request
+  field :team_1_name
+  field :team_2_name
+  field :start_time
+
+  self.site = 'http://localhost:3000/'  # The base-url for where we plan to retrieve data
+  self.path = 'games/'                  # Specific path to get the data for this Class
+
+  def self.get_game
+    build_request("http://localhost:3000/games/1")
+  end
+end
+```
 
 ## Contributing
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+3. Write some tests (Yes now.. [`vim spec/...`])
+4. Commit your changes (`git commit -am 'Added some feature'`)
+5. Push to the branch (`git push origin my-new-feature`)
+6. Create new Pull Request

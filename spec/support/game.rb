@@ -1,7 +1,6 @@
 require 'typhoid'
 
 class Game < Typhoid::Resource
-
   field :id
   field :team_1_name
   field :team_2_name
@@ -11,7 +10,6 @@ class Game < Typhoid::Resource
   self.path = 'games/'
 
   def self.get_game
-  	build_request("http://localhost:3000/games/1")
+    build_request("http://localhost:3000/games/1")
   end
-
 end

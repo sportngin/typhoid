@@ -1,23 +1,21 @@
 module Typhoid
-	module Multi
+  module Multi
+    def remote_resources(hydra = nil)
+      request_queue = RequestQueue.new(self, hydra)
+      yield request_queue if block_given?
 
-		def remote_resources(hydra = nil)
-	    request_queue = RequestQueue.new(self, hydra)
-	    yield request_queue if block_given?
-	    
-	    request_queue.run
-	    
-	    request_queue.requests.each do |req|
-	    	parse_queued_response req
-	    end
-	  end
+      request_queue.run
 
-	  protected
+      request_queue.requests.each do |req|
+        parse_queued_response req
+      end
+    end
 
-	  def parse_queued_response(req)
-		  	varname = "@" + req.name.to_s
-		  	req.target.instance_variable_set varname.to_sym, Typhoid::Resource.parse(req.klass, req.response)
-		  end
+    protected
 
-	end
+    def parse_queued_response(req)
+      varname = "@" + req.name.to_s
+      req.target.instance_variable_set varname.to_sym, Typhoid::Resource.parse(req.klass, req.response)
+    end
+  end
 end
