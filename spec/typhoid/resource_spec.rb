@@ -27,9 +27,7 @@ describe Typhoid::Resource do
   context "making a standalone request" do
     let(:hydra) { Typhoeus::Hydra.hydra }
     let(:game_response) { Typhoeus::Response.new(:code => 200, :headers => "", :body => {"team_1_name" => "Bears", "id" => "1"}.to_json) }
-
     it "should retrieve an object" do
-
       hydra.stub(:get, "http://localhost:3000/games/1").and_return(game_response)
 
       game = Game.get_game.run

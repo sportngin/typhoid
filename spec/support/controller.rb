@@ -1,5 +1,5 @@
 require 'typhoid'
 
 class Controller
-	include Typhoid::Multi
+  include Typhoid::Multi
 end
