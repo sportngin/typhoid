@@ -5,8 +5,3 @@ require "typhoid/multi"
 require 'typhoid/attributes'
 require 'typhoid/resource'
 require 'typhoid/request_builder'
-
-
-module Typhoid
- 
-end
