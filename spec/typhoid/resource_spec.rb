@@ -1,6 +1,17 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Typhoid::Resource do
+  it "gets a base request URI" do
+    Game.should respond_to :base_request_uri
+    Game.base_request_uri.should == "http://localhost:3000/games"
+  end
+
+  it "gets a base request URI" do
+    Game.should respond_to :built_request_uri
+    Game.built_request_uri.should == "http://localhost:3000/games"
+    Game.built_request_uri('1').should == "http://localhost:3000/games/1"
+  end
+
   it "should have fields defined" do
     game = Game.new
     game.should respond_to(:team_1_name)
