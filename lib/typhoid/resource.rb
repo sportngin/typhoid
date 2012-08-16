@@ -12,12 +12,34 @@ module Typhoid
     attr_accessor :resource_exception
 
     def self.build_request(uri, options = {})
+      if uri !~ Regexp.compile("^#{Regexp.escape(base_request_uri || "")}")
+        uri = built_request_uri(uri)
+      end
       Typhoid::RequestBuilder.new(self, uri, options)
     end
 
     def self.run(request)
       method = request.http_method
       parse(request.klass, (Typhoeus::Request.send method, request.request_uri, request.options))
+    end
+
+    def self.base_request_uri
+      if site or path
+        temp_site = site.gsub /\/$/, '' if site
+        temp_path = path.gsub(/^\//, '').gsub /\/$/, '' if path
+        [temp_site, temp_path].compact.join '/'
+      else
+        nil
+      end
+    end
+
+    def self.built_request_uri(path_or_query = nil)
+      if path_or_query =~ /^http:\/\//i
+        path_or_query
+      else
+        path_or_query = path_or_query.gsub(/^\//, '') unless path_or_query.nil?
+        [base_request_uri, path_or_query].compact.join '/'
+      end
     end
 
     def initialize(params = {})
