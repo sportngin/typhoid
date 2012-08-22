@@ -22,10 +22,13 @@ module Typhoid
     protected
 
     module ClassMethods
-      def field(field_name)
-        attr_accessor field_name.to_sym
+      def field(*field_names)
+        raise ArgumentError, "Must specify at least one field" if field_names.length == 0
         @auto_init_fields ||= []
-        @auto_init_fields << field_name.to_sym
+        field_names.each do |field_name|
+          attr_accessor field_name.to_sym
+          @auto_init_fields << field_name.to_sym
+        end
       end
 
       def auto_init_fields
