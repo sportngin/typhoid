@@ -24,6 +24,14 @@ module Typhoid
       load_values(params)
     end
 
+    # Rails-y set object attributes and save
+    #
+    # params  - hash to set attributes
+    def update_attributes(params)
+      assign_attributes params
+      save!
+    end
+
     def save!(method = nil)
       response = Typhoeus::Request.send save_http_method(method), save_request.request_uri, save_request.options
       Typhoid::Resource.load_values(self, response)
