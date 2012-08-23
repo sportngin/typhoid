@@ -10,6 +10,16 @@ module Typhoid
       end
     end
 
+    # Rails-y assign_attributes method that doesn't mistakenly
+    # assign nils as #load_values will
+    #
+    # params  - set object attribute to value
+    def assign_attributes(params)
+      params.each do |attrib, value|
+        send "#{attrib}=", value if respond_to? "#{attrib}="
+      end
+    end
+
     def read_attribute(name)
       attributes[name.to_s]
     end
