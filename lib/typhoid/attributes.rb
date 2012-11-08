@@ -6,7 +6,11 @@ module Typhoid
       params ||= {}
       @attributes = params
       self.class.auto_init_fields.each do |f|
-        self.send "#{f}=", params[f.to_s]
+        if params[f.to_s]
+          self.send "#{f}=", params[f.to_s]
+        else
+          self.send "#{f}=", params[f.to_sym]
+        end
       end
     end
 
