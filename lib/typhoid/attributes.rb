@@ -35,9 +35,13 @@ module Typhoid
         @auto_init_fields || []
       end
 
+      def parse_response(response)
+        JSON.parse(response.body)
+      end
+
       def parse(klass, response)
         if response.success?
-          response_body = JSON.parse(response.body)
+          response_body = parse_response(response)
           if response_body.is_a? Array
             parse_array(klass, response_body)
           else
@@ -50,7 +54,7 @@ module Typhoid
 
       def load_values(obj, response)
         if response.success?
-          response_body = JSON.parse(response.body)
+          response_body = parse_response(response)
           obj.load_values(response_body)
         else
           assign_request_error(obj.class, obj)
