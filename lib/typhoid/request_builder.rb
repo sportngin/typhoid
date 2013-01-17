@@ -9,6 +9,14 @@ module Typhoid
       @klass = klass
     end
 
+    def ==(other)
+      self.class == other.class &&
+        klass == other.klass &&
+        options_without_method == other.options_without_method &&
+        http_method == other.http_method &&
+        URI.parse(request_uri) == URI.parse(other.request_uri)
+    end
+
     def request_uri
       @uri
     end
@@ -24,6 +32,11 @@ module Typhoid
     def run
       klass.run(self)
     end
+
+    def options_without_method
+      options.clone.tap { |o| o.delete(:method) }
+    end
+    protected :options_without_method
   end
 end
 
