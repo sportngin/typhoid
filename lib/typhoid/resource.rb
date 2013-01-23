@@ -7,6 +7,11 @@ module Typhoid
 
     class << self
       attr_accessor :site, :path
+      attr_writer :parser
+
+      def parser
+        @parser ||= Typhoid::Parser
+      end
     end
 
     attr_accessor :resource_exception
