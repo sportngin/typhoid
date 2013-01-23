@@ -36,7 +36,7 @@ module Typhoid
       end
 
       def parse_response(response)
-        JSON.parse(response.body)
+        parser.call(response.body)
       end
 
       def parse(klass, response)
