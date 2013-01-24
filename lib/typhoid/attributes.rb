@@ -26,12 +26,12 @@ module Typhoid
         raise ArgumentError, "Must specify at least one field" if field_names.length == 0
         @auto_init_fields ||= []
         field_names.each do |field_name|
-          define_accessors field_name
+          define_accessor field_name
           @auto_init_fields << field_name.to_sym
         end
       end
 
-      def define_accessors(field_name)
+      def define_accessor(field_name)
         define_method field_name do
           attributes[field_name.to_s]
         end
