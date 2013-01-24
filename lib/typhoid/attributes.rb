@@ -39,7 +39,7 @@ module Typhoid
           @attributes[field_name.to_s] = new_value
         end
       end
-      private :define_accessors
+      private :define_accessor
 
       def auto_init_fields
         @auto_init_fields || []
