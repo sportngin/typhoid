@@ -21,7 +21,7 @@ describe Typhoid::Resource do
 
   it "should return the request path" do
     game = Game.new
-    game.request_uri.should eql "http://localhost:3000/games/"
+    game.request_uri.should eql "http://localhost:3000/games"
   end
 
   context "making a standalone request" do
@@ -37,7 +37,7 @@ describe Typhoid::Resource do
     end
 
     it "should create an object" do
-      hydra.stub(:post, "http://localhost:3000/games/").and_return(game_response)
+      hydra.stub(:post, "http://localhost:3000/games").and_return(game_response)
 
       game = Game.new
       game.save!

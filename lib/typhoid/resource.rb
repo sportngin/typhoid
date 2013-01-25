@@ -1,4 +1,5 @@
 require 'cgi'
+require 'typhoid/uri'
 
 module Typhoid
   class Resource
@@ -20,6 +21,16 @@ module Typhoid
       parse(request.klass, (Typhoeus::Request.send method, request.request_uri, request.options))
     end
 
+    def self.uri_join(*paths)
+      Uri.new(*paths).to_s
+    end
+
+    # Get this request URI based on site and path, can attach
+    # more paths
+    def self.request_uri(*more_paths)
+      uri_join site, path, *more_paths
+    end
+
     def initialize(params = {})
       load_values(params)
     end
@@ -39,21 +50,23 @@ module Typhoid
     end
 
     def save_http_method(method = nil)
-      if method
-        method
-      else
-        (new_record?) ? :post : :put
-      end
+      return method if method
+      (new_record?) ? :post : :put
     end
 
+    # Request URI is either in the object we retrieveed initially, built from
+    # site + path + id, or fail to the regular class#request_uri
+    #
+    # Also, check that the server we're speaking to isn't hypermedia inclined so
+    # look at our attributes for a URI
     def request_uri
-      self.class.site + self.class.path
+      attributes["uri"] || (new_record? ? self.class.request_uri(id) : self.class.request_uri)
     end
 
     protected
 
     def new_record?
-      id.nil?
+      id.to_s.length > 0
     end
 
     def create_request(method = :post)
@@ -61,13 +74,11 @@ module Typhoid
     end
 
     def update_request(method = :put)
-      uri = request_uri + self.id.to_s
-      Typhoid::RequestBuilder.new(self.class, uri, :body => attributes.to_json, :method => method, :headers => {"Content-Type" => 'application/json'})
+      Typhoid::RequestBuilder.new(self.class, request_uri, :body => attributes.to_json, :method => method, :headers => {"Content-Type" => 'application/json'})
     end
 
     def delete_request(method = :delete)
-      uri = request_uri + self.id.to_s
-      Typhoid::RequestBuilder.new(self.class, uri, :method => method)
+      Typhoid::RequestBuilder.new(self.class, request_uri, :method => method)
     end
   end
 end
