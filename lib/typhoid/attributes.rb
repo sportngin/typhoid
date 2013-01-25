@@ -5,9 +5,6 @@ module Typhoid
     def load_values(params)
       params ||= {}
       @attributes = params
-      self.class.auto_init_fields.each do |f|
-        self.send "#{f}=", params[f.to_s]
-      end
     end
 
     def read_attribute(name)
