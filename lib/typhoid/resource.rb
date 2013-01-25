@@ -50,11 +50,16 @@ module Typhoid
       self.class.site + self.class.path
     end
 
-    protected
+    def persisted?
+      !new_record?
+    end
 
     def new_record?
       id.nil?
     end
+    alias new? new_record?
+
+    protected
 
     def create_request(method = :post)
       Typhoid::RequestBuilder.new(self.class, request_uri, :params => attributes, :method => method)
