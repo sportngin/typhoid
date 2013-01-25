@@ -2,9 +2,8 @@ module Typhoid
   module Attributes
     attr_reader :attributes
 
-    def load_values(params)
-      params ||= {}
-      @attributes = params
+    def load_values(params = {})
+      @attributes = Hash[params.map { |key, value| [key.to_s, value] }]
     end
 
     def read_attribute(name)
