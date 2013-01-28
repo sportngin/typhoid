@@ -25,7 +25,7 @@ module Typhoid
     end
 
     def save!(method = nil)
-      response = Typhoeus::Request.send save_http_method(method), save_request.request_uri, save_request.options
+      response = save_request(method).run
       self.class.load_values(self, response)
     end
 
@@ -34,8 +34,8 @@ module Typhoid
       self.class.load_values(self, response)
     end
 
-    def save_request
-      (new_record?) ? create_request : update_request
+    def save_request(method = nil)
+      new_record? ? create_request(method) : update_request(method)
     end
 
     def save_http_method(method = nil)
