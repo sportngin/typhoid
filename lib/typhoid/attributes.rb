@@ -2,12 +2,8 @@ module Typhoid
   module Attributes
     attr_reader :attributes
 
-    def load_values(params)
-      params ||= {}
-      @attributes = params
-      self.class.auto_init_fields.each do |f|
-        self.send "#{f}=", params[f.to_s]
-      end
+    def load_values(params = {})
+      @attributes = Hash[params.map { |key, value| [key.to_s, value] }]
     end
 
     def read_attribute(name)
@@ -26,10 +22,20 @@ module Typhoid
         raise ArgumentError, "Must specify at least one field" if field_names.length == 0
         @auto_init_fields ||= []
         field_names.each do |field_name|
-          attr_accessor field_name.to_sym
+          define_accessor field_name
           @auto_init_fields << field_name.to_sym
         end
       end
+
+      def define_accessor(field_name)
+        define_method field_name do
+          @attributes[field_name.to_s]
+        end
+        define_method "#{field_name}=" do |new_value|
+          @attributes[field_name.to_s] = new_value
+        end
+      end
+      private :define_accessor
 
       def auto_init_fields
         @auto_init_fields || []
