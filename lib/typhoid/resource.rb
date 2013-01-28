@@ -60,13 +60,13 @@ module Typhoid
     # Also, check that the server we're speaking to isn't hypermedia inclined so
     # look at our attributes for a URI
     def request_uri
-      attributes["uri"] || (new_record? ? self.class.request_uri(id) : self.class.request_uri)
+      attributes["uri"] || (new_record? ? self.class.request_uri : self.class.request_uri(id))
     end
 
     protected
 
     def new_record?
-      id.to_s.length > 0
+      id.to_s.length < 1
     end
 
     def create_request(method = :post)
