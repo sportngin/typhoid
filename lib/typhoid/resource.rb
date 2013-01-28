@@ -26,12 +26,12 @@ module Typhoid
 
     def save!(method = nil)
       response = Typhoeus::Request.send save_http_method(method), save_request.request_uri, save_request.options
-      Typhoid::Resource.load_values(self, response)
+      self.class.load_values(self, response)
     end
 
     def destroy!
       response = Typhoeus::Request.delete(delete_request.request_uri, delete_request.options)
-      Typhoid::Resource.load_values(self, response)
+      self.class.load_values(self, response)
     end
 
     def save_request
@@ -50,11 +50,16 @@ module Typhoid
       self.class.site + self.class.path
     end
 
-    protected
+    def persisted?
+      !new_record?
+    end
 
     def new_record?
       id.nil?
     end
+    alias new? new_record?
+
+    protected
 
     def to_params
       attributes
