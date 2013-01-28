@@ -29,7 +29,7 @@ module Typhoid
 
       def define_accessor(field_name)
         define_method field_name do
-          attributes[field_name.to_s]
+          @attributes[field_name.to_s]
         end
         define_method "#{field_name}=" do |new_value|
           @attributes[field_name.to_s] = new_value
