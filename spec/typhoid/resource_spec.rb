@@ -1,6 +1,20 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Typhoid::Resource do
+  it "synchronizes field with attribute" do
+    response_data = {"team_1_name" => 'Bears', "team_2_name" => 'Lions'}
+    game = Game.new(response_data)
+    game.team_1_name.should == 'Bears'
+    game.attributes["team_1_name"].should == 'Bears'
+    game.attributes["team_1_name"] = 'Da Bears'
+    game.attributes["team_1_name"].should == 'Da Bears'
+    game.team_1_name.should == 'Da Bears'
+
+    game.team_1_name = 'Orange'
+    game.team_1_name.should == 'Orange'
+    game.attributes["team_1_name"].should == 'Orange'
+  end
+
   it "should have fields defined" do
     game = Game.new
     game.should respond_to(:team_1_name)
