@@ -11,12 +11,12 @@ module Typhoid
 
     def initialize(*paths)
       self.base = URI.parse paths.shift.to_s
-      self.paths = sanitize paths
+      self.paths = sanitize(paths)
       raise "Invalid Base on #uri_join: #{base}" unless base.scheme || base.host
     end
 
     def join(*more_paths)
-      full_path = sanitize([base.path] + paths + more_paths).join "/"
+      full_path = (paths + sanitize(more_paths)).join "/"
       base.clone.merge(full_path).to_s
     end
 
