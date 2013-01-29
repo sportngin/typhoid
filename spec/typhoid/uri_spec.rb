@@ -6,7 +6,7 @@ module Typhoid
 
     its(:to_s) { should == "http://localhost/users" }
     it "sets base" do
-      subject.base.to_s.should == "http://localhost/"
+      subject.base.to_s.should == "http://localhost"
     end
 
     it "sets path" do

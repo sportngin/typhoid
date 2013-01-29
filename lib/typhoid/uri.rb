@@ -11,7 +11,8 @@ module Typhoid
 
     def initialize(*paths)
       self.base = URI.parse paths.shift.to_s
-      self.paths = sanitize(paths)
+      self.paths = sanitize(base.path) + sanitize(paths)
+      base.path = ""
       raise "Invalid Base on #uri_join: #{base}" unless base.scheme || base.host
     end
 
