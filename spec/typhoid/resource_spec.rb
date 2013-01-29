@@ -39,25 +39,54 @@ describe Typhoid::Resource do
   end
 
   context "making a standalone request" do
+    after { hydra.clear_stubs }
     let(:hydra) { Typhoeus::Hydra.hydra }
     let(:game_response) { Typhoeus::Response.new(:code => 200, :headers => "", :body => {"team_1_name" => "Bears", "id" => "1"}.to_json) }
+    let(:failed_game_response) { Typhoeus::Response.new(:code => 404, :headers => "", :body => {}.to_json) }
     it "should retrieve an object" do
       hydra.stub(:get, "http://localhost:3000/games/1").and_return(game_response)
 
       game = Game.get_game.run
       game.class.should eql Game
       game.team_1_name.should eql 'Bears'
+    end
 
+    it "raises error on save!" do
+      hydra.stub(:post, "http://localhost:3000/games").and_return(failed_game_response)
+
+      game = Game.new
+      expect { game.save! }.to raise_error
+    end
+
+    it "raises error on destroy!" do
+      hydra.stub(:delete, "http://localhost:3000/games/1").and_return(failed_game_response)
+
+      game = Game.new("id" => 1, "team_1_name" => 'Tigers')
+      expect { game.destroy! }.to raise_error
+    end
+
+    it "raises error on save!" do
+      hydra.stub(:post, "http://localhost:3000/games").and_return(game_response)
+
+      game = Game.new
+      expect { game.save! }.to_not raise_error
+    end
+
+    it "raises error on save!" do
+      hydra.stub(:delete, "http://localhost:3000/games/1").and_return(game_response)
+
+      game = Game.new("id" => 1, "team_1_name" => 'Tigers')
+      expect { game.destroy! }.to_not raise_error
     end
 
     it "should create an object" do
       hydra.stub(:post, "http://localhost:3000/games").and_return(game_response)
 
       game = Game.new
-      game.save!
+      game.save
 
-      game.id.should eql "1"
-      game.team_1_name.should eql "Bears"
+      game.id.should == "1"
+      game.team_1_name.should == "Bears"
     end
 
     it "should update an object" do
@@ -65,17 +94,17 @@ describe Typhoid::Resource do
       hydra.stub(:put, "http://localhost:3000/games/1").and_return(update_response)
 
       game = Game.new("id" => 1, "team_1_name" => 'Tigers')
-      game.save!
+      game.save
 
-      game.resource_exception.should be nil
-      game.team_1_name.should eql "Bears"
+      game.resource_exception.should be_nil
+      game.team_1_name.should == "Bears"
     end
 
     it "should delete an object" do
       hydra.stub(:delete, "http://localhost:3000/games/1").and_return(game_response)
 
       game = Game.new("id" => 1, "team_1_name" => 'Tigers')
-      game.destroy!
+      game.destroy
 
       game.resource_exception.should be nil
 
@@ -86,7 +115,7 @@ describe Typhoid::Resource do
       hydra.stub(:post, "http://localhost:3000/games/1").and_return(update_response)
 
       game = Game.new("id" => 1, "team_1_name" => 'Tigers')
-      game.save!(:post)
+      game.save(:post)
 
       game.resource_exception.should be nil
 

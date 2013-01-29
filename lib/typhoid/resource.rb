@@ -35,14 +35,30 @@ module Typhoid
       load_values(params)
     end
 
+    def success?
+      !resource_exception
+    end
+
     def save!(method = nil)
-      response = Typhoeus::Request.send save_http_method(method), save_request.request_uri, save_request.options
-      self.class.load_values(self, response)
+      save method
+      raise resource_exception unless success?
     end
 
     def destroy!
-      response = Typhoeus::Request.delete(delete_request.request_uri, delete_request.options)
-      self.class.load_values(self, response)
+      destroy
+      raise resource_exception unless success?
+    end
+
+    def save(method = nil)
+      request_and_load do
+        Typhoeus::Request.send save_http_method(method), save_request.request_uri, save_request.options
+      end
+    end
+
+    def destroy
+      request_and_load do
+        Typhoeus::Request.delete(delete_request.request_uri, delete_request.options)
+      end
     end
 
     def save_request
@@ -61,6 +77,13 @@ module Typhoid
     # look at our attributes for a URI
     def request_uri
       attributes["uri"] || (new_record? ? self.class.request_uri : self.class.request_uri(id))
+    end
+
+    def request_and_load(&block)
+      self.resource_exception = nil
+      response = yield
+      self.class.load_values(self, response)
+      success?
     end
 
     def persisted?
