@@ -79,7 +79,7 @@ module Typhoid
 
       def assign_request_error(klass, obj = nil)
         obj ||= klass.new
-        obj.resource_exception = Exception.new("Could not retrieve data from remote service") #TODO: more specific errors
+        obj.resource_exception = StandardError.new("Could not retrieve data from remote service") #TODO: more specific errors
         obj
       end
     end
