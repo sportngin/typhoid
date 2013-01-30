@@ -97,12 +97,16 @@ module Typhoid
 
     protected
 
+    def to_params
+      attributes
+    end
+
     def create_request(method = :post)
-      Typhoid::RequestBuilder.new(self.class, request_uri, :params => attributes, :method => method)
+      Typhoid::RequestBuilder.new(self.class, request_uri, :body => to_params.to_json, :method => method, :headers => {"Content-Type" => 'application/json'})
     end
 
     def update_request(method = :put)
-      Typhoid::RequestBuilder.new(self.class, request_uri, :body => attributes.to_json, :method => method, :headers => {"Content-Type" => 'application/json'})
+      Typhoid::RequestBuilder.new(self.class, request_uri, :body => to_params.to_json, :method => method, :headers => {"Content-Type" => 'application/json'})
     end
 
     def delete_request(method = :delete)
