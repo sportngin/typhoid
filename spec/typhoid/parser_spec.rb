@@ -54,28 +54,6 @@ module Typhoid
           subject.parse["result"]["type"].should == "orphan"
         end
       end
-
-      describe "singular?" do
-        describe "with hash" do
-          its(:singular?) { should be_true }
-        end
-
-        describe "with array return" do
-          let(:example_json) { example_array }
-          its(:singular?) { should be_false }
-        end
-      end
-
-      describe "array?" do
-        describe "with hash" do
-          its(:array?) { should be_false }
-        end
-
-        describe "with array return" do
-          let(:example_json) { example_array }
-          its(:array?) { should be_true }
-        end
-      end
     end
   end
 end

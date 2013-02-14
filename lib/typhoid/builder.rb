@@ -3,7 +3,6 @@ module Typhoid
     attr_reader :klass
     attr_reader :response
     attr_reader :body
-    attr_reader :parsed
     attr_reader :parsed_body
 
     def self.call(klass, response)
@@ -14,12 +13,11 @@ module Typhoid
       @klass = klass
       @response = response
       @body = response.body
-      @parsed = parse
-      @parsed_body = parsed.parse
+      @parsed_body = parser.call body
     end
 
     def build
-      parsed.singular? ? build_single : build_array
+      array? ? build_array : build_single
     end
 
     def build_from_klass(attributes)
@@ -28,6 +26,11 @@ module Typhoid
       }
     end
     private :build_from_klass
+
+    def array?
+      parsed_body.is_a?(Array)
+    end
+    private :array?
 
     def build_array
       parsed_body.collect { |single|
@@ -41,13 +44,8 @@ module Typhoid
     end
     private :build_single
 
-    def parse
-      parser.new body
-    end
-    private :parse
-
     def parser
-      Parser
+      klass.parser
     end
     private :parser
   end

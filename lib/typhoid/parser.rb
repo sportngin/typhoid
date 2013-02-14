@@ -14,14 +14,6 @@ module Typhoid
       parsed_body
     end
 
-    def singular?
-      !array?
-    end
-
-    def array?
-      parsed_body.is_a?(Array)
-    end
-
     def parsed_body
       engine.call json_string
     rescue
