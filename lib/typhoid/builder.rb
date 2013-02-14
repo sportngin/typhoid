@@ -4,6 +4,7 @@ module Typhoid
     attr_reader :response
     attr_reader :body
     attr_reader :parsed_body
+    attr_reader :exception
 
     def self.call(klass, response)
       new(klass, response).build
@@ -13,7 +14,12 @@ module Typhoid
       @klass = klass
       @response = response
       @body = response.body
-      @parsed_body = parser.call body
+      begin
+        @parsed_body = parser.call body
+      rescue StandardError => e
+        @parsed_body = {}
+        @exception = e
+      end
     end
 
     def build
@@ -22,7 +28,7 @@ module Typhoid
 
     def build_from_klass(attributes)
       klass.new(attributes).tap { |item|
-        item.after_build(response) if item.respond_to? :after_build
+        item.after_build(response, exception) if item.respond_to? :after_build
       }
     end
     private :build_from_klass

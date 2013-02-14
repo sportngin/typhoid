@@ -11,12 +11,12 @@ module Typhoid
     end
     alias :[] :read_attribute
 
-    def after_build(response)
-      assign_request_error unless response.success?
+    def after_build(response, exception = nil)
+      assign_request_error(exception) unless response.success? && exception.nil?
     end
 
-    def assign_request_error
-      self.resource_exception = StandardError.new("Could not retrieve data from remote service") #TODO: more specific errors
+    def assign_request_error(exception = nil)
+      self.resource_exception = exception || StandardError.new("Could not retrieve data from remote service")
     end
     private :assign_request_error
 

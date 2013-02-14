@@ -17,7 +17,7 @@ module Typhoid
     def parsed_body
       engine.call json_string
     rescue
-      {}
+      raise ReadError, json_string
     end
     private :parsed_body
 
@@ -25,5 +25,28 @@ module Typhoid
       JSON.method(:parse)
     end
     private :engine
+  end
+
+  class ReadError < StandardError
+    attr_reader :body
+    def initialize(body)
+      @body = body
+    end
+
+    def to_s
+      "Could not parse JSON body: #{cleaned_body}"
+    end
+
+    def cleaned_body
+      clean = body[0..10]
+      clean = clean + "..." if add_dots?
+      clean
+    end
+    private :cleaned_body
+
+    def add_dots?
+      body.length > 10
+    end
+    private :add_dots?
   end
 end

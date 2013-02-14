@@ -125,13 +125,13 @@ describe Typhoid::Resource do
   context "handling bad requests" do
     let(:fake_hydra) { Typhoeus::Hydra.new }
     before do
-      bad_game = Typhoeus::Response.new(:code => 500, :headers => "")
+      bad_game = Typhoeus::Response.new(:code => 500, :headers => "", :body => "<htmlasdfasdfasdf")
       fake_hydra.stub(:get, "http://localhost:3000/games/1").and_return(bad_game)
     end
 
     it "should assign an exception object on a bad request" do
       controller = Controller.new
-      controller.remote_resources(@fake_hydra) do |req|
+      controller.remote_resources(fake_hydra) do |req|
         req.resource(:game, Game.get_game)
       end
 
