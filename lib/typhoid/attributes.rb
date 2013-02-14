@@ -11,6 +11,15 @@ module Typhoid
     end
     alias :[] :read_attribute
 
+    def after_build(response)
+      assign_request_error unless response.success?
+    end
+
+    def assign_request_error
+      self.resource_exception = StandardError.new("Could not retrieve data from remote service") #TODO: more specific errors
+    end
+    private :assign_request_error
+
     def self.included(base)
       base.extend(ClassMethods)
     end
@@ -41,46 +50,23 @@ module Typhoid
         @auto_init_fields || []
       end
 
+      def builder
+        Builder
+      end
+
+      def parser
+        Parser
+      end
+
       def parse(klass, response)
-        if response.success?
-          response_body = JSON.parse(response.body)
-          if response_body.is_a? Array
-            parse_array(klass, response_body)
-          else
-            parse_single_obj(klass, response_body)
-          end
-        else
-          assign_request_error(klass)
-        end
+        builder.call(klass, response)
       end
 
-      def load_values(obj, response)
-        if response.success?
-          response_body = JSON.parse(response.body)
-          obj.load_values(response_body)
-        else
-          assign_request_error(obj.class, obj)
-        end
-      end
-
-      private
-
-      def parse_array(klass, content)
-        values = []
-        content.each do |obj|
-          values << klass.new(obj)
-        end
-        values
-      end
-
-      def parse_single_obj(klass, content)
-        klass.new(content)
-      end
-
-      def assign_request_error(klass, obj = nil)
-        obj ||= klass.new
-        obj.resource_exception = StandardError.new("Could not retrieve data from remote service") #TODO: more specific errors
-        obj
+      def load_values(object, response)
+        object.tap { |obj|
+          obj.load_values(parser.call response.body)
+          obj.after_build response
+        }
       end
     end
   end
