@@ -11,7 +11,7 @@ module Typhoid
     end
 
     def parse
-      raw_body
+      parsed_body
     end
 
     def singular?
@@ -19,15 +19,15 @@ module Typhoid
     end
 
     def array?
-      raw_body.is_a?(Array)
+      parsed_body.is_a?(Array)
     end
 
-    def raw_body
+    def parsed_body
       engine.call json_string
     rescue
       {}
     end
-    private :raw_body
+    private :parsed_body
 
     def engine
       JSON.method(:parse)
