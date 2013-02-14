@@ -12,7 +12,7 @@ module Typhoid
     alias :[] :read_attribute
 
     def after_build(response, exception = nil)
-      assign_request_error(exception) unless response.success? && exception.nil?
+      assign_request_error(exception) if !response.success? || !exception.nil?
     end
 
     def assign_request_error(exception = nil)
