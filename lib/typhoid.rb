@@ -1,5 +1,7 @@
 require "typhoid/version"
 require 'typhoid/uri'
+require 'typhoid/parser'
+require 'typhoid/builder'
 require "typhoid/request_queue"
 require "typhoid/queued_request"
 require "typhoid/multi"
