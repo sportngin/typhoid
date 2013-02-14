@@ -58,7 +58,7 @@ module Typhoid
         Parser
       end
 
-      def parse(klass, response)
+      def build(klass, response)
         builder.call(klass, response)
       end
 

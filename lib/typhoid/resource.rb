@@ -18,7 +18,7 @@ module Typhoid
 
     def self.run(request)
       method = request.http_method
-      parse(request.klass, (Typhoeus::Request.send method, request.request_uri, request.options))
+      build(request.klass, (Typhoeus::Request.send method, request.request_uri, request.options))
     end
 
     def self.uri_join(*paths)

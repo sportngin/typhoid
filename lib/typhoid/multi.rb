@@ -15,7 +15,7 @@ module Typhoid
 
     def parse_queued_response(req)
       varname = "@" + req.name.to_s
-      req.target.instance_variable_set varname.to_sym, Typhoid::Resource.parse(req.klass, req.response)
+      req.target.instance_variable_set varname.to_sym, Typhoid::Resource.build(req.klass, req.response)
     end
   end
 end
