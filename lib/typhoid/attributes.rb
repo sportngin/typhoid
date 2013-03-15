@@ -1,9 +1,12 @@
 module Typhoid
   module Attributes
-    attr_reader :attributes
-
     def load_values(params = {})
       @attributes = Hash[params.map { |key, value| [key.to_s, value] }]
+    end
+
+    def attributes
+      @attributes ||= {}
+      @attributes
     end
 
     def read_attribute(name)
@@ -38,10 +41,10 @@ module Typhoid
 
       def define_accessor(field_name)
         define_method field_name do
-          @attributes[field_name.to_s]
+          attributes[field_name.to_s]
         end
         define_method "#{field_name}=" do |new_value|
-          @attributes[field_name.to_s] = new_value
+          attributes[field_name.to_s] = new_value
         end
       end
       private :define_accessor
