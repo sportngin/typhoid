@@ -2,8 +2,8 @@
 require File.expand_path('../lib/typhoid/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["Doug Rohde"]
-  gem.email         = ["doug.rohde@tstmedia.com"]
+  gem.authors       = ["Doug Rohde", "Jon Phenow"]
+  gem.email         = ["doug.rohde@sportngin.com", "jon.phenow@sportngin.com"]
   gem.description   = %q{A lightweight ORM-like wrapper around Typhoeus}
   gem.summary       = %q{A lightweight ORM-like wrapper around Typhoeus}
   gem.homepage      = ""
@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Typhoid::VERSION
 
-  gem.add_dependency 'typhoeus'
+  gem.add_dependency 'typhoeus', "0.4.2"
 
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'json_pure', [">= 1.4.1"]
