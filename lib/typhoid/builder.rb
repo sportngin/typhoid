@@ -16,7 +16,7 @@ module Typhoid
       @body = response.body
       begin
         @parsed_body = parser.call body
-      rescue StandardError => e
+      rescue StandardError, ReadError => e
         @parsed_body = {}
         @exception = e
       end
