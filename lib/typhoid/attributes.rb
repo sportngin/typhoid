@@ -67,8 +67,14 @@ module Typhoid
 
       def load_values(object, response)
         object.tap { |obj|
-          obj.load_values(parser.call response.body)
-          obj.after_build response
+          error = nil
+          begin
+            obj.load_values(parser.call response.body)
+          rescue ReadError => e
+            error = e
+          ensure
+            obj.after_build response, error
+          end
         }
       end
     end
