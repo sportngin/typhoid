@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     typhoid (0.0.1)
-      typhoeus
+      typhoeus (= 0.4.2)
 
 GEM
   remote: https://rubygems.org/
