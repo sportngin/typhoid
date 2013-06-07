@@ -1,26 +1,26 @@
 module Typhoid
   class TyphoeusDecorator < Struct.new(:source)
     def self.decorate(typhoeus_klass)
-      @klass_to_decorate = typhoeus_klass
+      @source_klass = typhoeus_klass
     end
 
-    def self.klass_to_decorate
-      @klass_to_decorate
+    def self.source_klass
+      @source_klass
     end
 
     def self.new(*args, &block)
       if args.first.is_a?(self)
         args.first
-      elsif args.first.is_a?(klass_to_decorate)
+      elsif args.first.is_a?(source_klass)
         super
       else
-        super(klass_to_decorate.new(*args, &block))
+        super(source_klass.new(*args, &block))
       end
     end
 
     def self.method_missing(method_name, *args, &block)
-      if klass_to_decorate.respond_to? method_name
-        klass_to_decorate.public_send method_name, *args, &block
+      if source_klass.respond_to? method_name
+        source_klass.public_send method_name, *args, &block
       else
         super
       end
