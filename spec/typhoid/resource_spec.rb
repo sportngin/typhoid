@@ -1,9 +1,12 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe Typhoid::Resource do
+  def new_typhoeus?
+    Typhoid.typhoeus.major_version == 0 && Typhoid.typhoeus.minor_version >= 6
+  end
+
   def typhoeus_stub(verb, url, response, hydra)
-    version = Typhoeus::VERSION.to_s.match /(?<major>\d+)\.(?<minor>\d+)\.(?<bug>\d+)/
-    if version[:minor].to_i >= 6
+    if new_typhoeus?
       Typhoeus.stub(url).and_return response
     else
       hydra.stub(verb, url).and_return(response)
@@ -32,31 +35,36 @@ describe Typhoid::Resource do
   it "should populate defined attributes" do
     response_data = {"team_1_name" => 'Bears', "team_2_name" => 'Lions'}
     game = Game.new(response_data)
-    game.team_1_name.should eql 'Bears'
+    game.team_1_name.should == 'Bears'
     game.start_time.should be_nil
   end
 
   it "should populate attributes" do
     game = Game.new({"team_1_name" => 'Bears', "team_2_name" => 'Lions'})
-    game.read_attribute(:team_1_name).should eql 'Bears'
-    game[:team_2_name].should eql 'Lions'
+    game.read_attribute(:team_1_name).should == 'Bears'
+    game[:team_2_name].should == 'Lions'
   end
 
   it "should return the request path" do
     game = Game.new
-    game.request_uri.should eql "http://localhost:3000/games"
+    game.request_uri.should == "http://localhost:3000/games"
   end
 
   context "making a standalone request" do
     let(:hydra) { Typhoeus::Hydra.hydra }
     let(:game_response) { Typhoeus::Response.new(:code => 200, :headers => "", :body => {"team_1_name" => "Bears", "id" => "1"}.to_json) }
     let(:failed_game_response) { Typhoeus::Response.new(:code => 404, :headers => "", :body => {}.to_json) }
+
+    before do
+      hydra.clear_stubs unless new_typhoeus?
+    end
+
     it "should retrieve an object" do
       typhoeus_stub(:get, "http://localhost:3000/games/1", game_response, hydra)
 
       game = Game.get_game.run
-      game.class.should eql Game
-      game.team_1_name.should eql 'Bears'
+      game.class.should == Game
+      game.team_1_name.should == 'Bears'
     end
 
     it "raises error on save!" do
@@ -131,8 +139,8 @@ describe Typhoid::Resource do
 
   context "handling bad requests" do
     let(:fake_hydra) { Typhoeus::Hydra.new }
+    let(:bad_game) { Typhoid::Response.new(:code => 500, :headers => "", :body => "<htmlasdfasdfasdf") }
     before do
-      bad_game = Typhoeus::Response.new(:code => 500, :headers => "", :body => "<htmlasdfasdfasdf")
       typhoeus_stub(:get, "http://localhost:3000/games/1", bad_game, fake_hydra)
     end
 
