@@ -15,7 +15,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Typhoid::VERSION
 
-  gem.add_dependency 'typhoeus', "0.4.2"
+  gem.add_dependency 'typhoeus', "~> 0.4"
 
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'json_pure', [">= 1.4.1"]
