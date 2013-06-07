@@ -27,7 +27,24 @@ module Typhoid
     end
 
     def self.respond_to?(method_name, include_private = false)
-      klass_to_decorate.respond_to?(method_name) || super
+      source_klass.respond_to?(method_name) || super
+    end
+
+    def self.inspect
+      "#{self.name}Decorator(#{source_klass.name})"
+    end
+
+    def ==(other)
+      other == source
+    end
+
+    def kind_of?(klass)
+      super || source.kind_of?(klass)
+    end
+    alias_method :is_a?, :kind_of?
+
+    def instance_of?(klass)
+      super || source.instance_of?(klass)
     end
 
     def compat(method_names, *args, &block)
@@ -38,6 +55,10 @@ module Typhoid
         raise TyphoeusCompatabilityError,
           "Typhoeus API has changed, we don't know how to get response. We know about [:handled_response, :response]"
       end
+    end
+
+    def inspect
+      "#<#{self.class.name} source: (#{source.inspect})>"
     end
 
     def method_missing(method_name, *args, &block)
