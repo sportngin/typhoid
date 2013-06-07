@@ -8,11 +8,11 @@ module Typhoid
       self.request = Request.new(req.request_uri, req.options)
       self.klass = req.klass
       self.target = target
-      hydra.queue(self.request)
+      hydra.queue(request)
     end
 
     def on_complete
-      self.request.on_complete do
+      request.on_complete do
         yield self if block_given?
       end
     end
@@ -22,11 +22,7 @@ module Typhoid
     end
 
     def response
-      self.request.response
-    end
-
-    def klass
-      @klass
+      request.response
     end
   end
 end
