@@ -76,7 +76,7 @@ module Typhoid
     end
 
     def respond_to?(method_name, include_private = false)
-      method_name.to_s != "each" && (source.respond_to?(method_name) || super)
+      source.respond_to?(method_name) || super
     end
   end
 end
