@@ -4,14 +4,23 @@ require 'json'
 
 describe Typhoid::Multi do
   context "making multiple requests" do
-    before(:each) do
-      @fake_hydra = Typhoeus::Hydra.new
-      game = Typhoeus::Response.new(:code => 200, :headers => "", :body => {"team_1_name" => "Bears"}.to_json, :time => 0.03)
-      @fake_hydra.stub(:get, "http://localhost:3000/games/1").and_return(game)
+    def typhoeus_stub(verb, url, response, hydra)
+      version = Typhoeus::VERSION.to_s.match /(?<major>\d+)\.(?<minor>\d+)\.(?<bug>\d+)/
+      if version[:minor].to_i >= 6
+        Typhoeus.stub(url).and_return response
+      else
+        hydra.stub(verb, url).and_return(response)
+      end
+    end
 
-      stats = Typhoeus::Response.new(:code => 200, :headers => "", 
-                                     :body => [{'player_name' => 'Bob', 'goals' => 1}, {'player_name' => 'Mike', 'goals' => 1}].to_json, :time => 0.02)
-      @fake_hydra.stub(:get, "http://localhost:3000/stats/2").and_return(stats)
+    before do
+      @fake_hydra = Typhoeus::Hydra.new
+      game = Typhoid::Response.new(:code => 200, :headers => "", :body => {"team_1_name" => "Bears"}.to_json, :time => 0.03)
+      typhoeus_stub :get, "http://localhost:3000/games/1", game, @fake_hydra
+
+      stats = Typhoid::Response.new(:code => 200, :headers => "",
+                                    :body => [{'player_name' => 'Bob', 'goals' => 1}, {'player_name' => 'Mike', 'goals' => 1}].to_json, :time => 0.02)
+      typhoeus_stub :get, "http://localhost:3000/stats/2", stats, @fake_hydra
     end
 
     it "should assign the response to instance variables" do
