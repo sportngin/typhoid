@@ -5,7 +5,7 @@ module Typhoid
 
     def initialize(hydra, name, req, target)
       self.name = name
-      self.request = Typhoeus::Request.new(req.request_uri, req.options)
+      self.request = Request.new(req.request_uri, req.options)
       self.klass = req.klass
       self.target = target
       hydra.queue(self.request)
@@ -18,11 +18,11 @@ module Typhoid
     end
 
     def status
-      self.request.handled_response.code
+      response.code
     end
 
     def response
-      self.request.handled_response
+      self.request.response
     end
 
     def klass
