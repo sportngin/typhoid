@@ -1,5 +1,5 @@
 module Typhoid
-  class TyphoeusDecorator < Struct.new(:source)
+  class TyphoeusDecorator
     def self.decorate(typhoeus_klass)
       @source_klass = typhoeus_klass
     end
@@ -32,6 +32,12 @@ module Typhoid
 
     def self.inspect
       "#{self.name}Decorator(#{source_klass.name})"
+    end
+
+    attr_reader :source
+
+    def initialize(source)
+      @source = source
     end
 
     def ==(other)
@@ -70,7 +76,7 @@ module Typhoid
     end
 
     def respond_to?(method_name, include_private = false)
-      source.respond_to?(method_name) || super
+      method_name.to_s != "each" && (source.respond_to?(method_name) || super)
     end
   end
 end
