@@ -3,6 +3,10 @@ module Typhoid
   class Request < TyphoeusDecorator
     decorate ::Typhoeus::Request
 
+    def run
+      Typhoid::Response.new source.run
+    end
+
     def response
       compat [:handled_response, :response]
     end
