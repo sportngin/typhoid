@@ -14,7 +14,7 @@ module Typhoid
     end
 
     def options
-      @request_options
+      @request_options.reject { |key,_| key.to_s == "method" }
     end
 
     def http_method
