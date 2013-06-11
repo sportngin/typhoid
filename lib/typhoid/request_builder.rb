@@ -1,16 +1,15 @@
 module Typhoid
   class RequestBuilder
     attr_accessor :klass
+    attr_accessor :request_options
+    attr_accessor :request_uri
+
     attr_writer :method
 
     def initialize(klass, uri, options = {})
-      @uri = uri
-      @request_options = options
-      @klass = klass
-    end
-
-    def request_uri
-      @uri
+      self.request_uri = uri
+      self.request_options = options || {}
+      self.klass = klass
     end
 
     def options
@@ -18,7 +17,7 @@ module Typhoid
     end
 
     def http_method
-      options[:method] || :get
+      request_options[:method] || :get
     end
 
     def run
