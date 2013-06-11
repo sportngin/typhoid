@@ -13,7 +13,7 @@ module Typhoid
     end
 
     def options
-      @request_options.reject { |key,_| key.to_s == "method" }
+     symbolize_keys({ method: http_method }.merge(request_options))
     end
 
     def http_method
@@ -22,6 +22,26 @@ module Typhoid
 
     def run
       klass.run(self)
+    end
+
+    private
+
+    # Ethon hates on hash with indifferent access for some reason
+    def symbolize_keys(hash)
+      hash = hash.to_hash
+      if hash.respond_to?(:symbolize_keys)
+        hash.symbolize_keys
+      else
+        hash.inject({}) do |new_hash, (key, value)|
+          new_hash[symbolize_key(key)] = value
+          new_hash
+        end
+      end
+    end
+
+    def symbolize_key(key)
+      return key if key.is_a?(Symbol)
+      key.to_s.to_sym
     end
   end
 end
