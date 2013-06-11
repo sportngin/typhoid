@@ -5,7 +5,7 @@ module Typhoid
 
     def run
       if Typhoid.typhoeus.major_version == 0
-        if Typhoid.typhoeus.minor_version <= 6
+        if Typhoid.typhoeus.minor_version >= 6
           response = source.run
         else
           response = Typhoeus::Request.send(method, url, options)
