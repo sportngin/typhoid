@@ -17,8 +17,7 @@ module Typhoid
     end
 
     def self.run(request)
-      method = request.http_method
-      build(request.klass, (Request.send method, request.request_uri, request.options))
+      build(request.klass, (Request.new(request.request_uri, request.options).run))
     end
 
     def self.uri_join(*paths)
@@ -51,13 +50,13 @@ module Typhoid
 
     def save(method = nil)
       request_and_load do
-        Request.send save_http_method(method), save_request.request_uri, save_request.options
+        Request.new(save_request.request_uri, save_request.options).run
       end
     end
 
     def destroy
       request_and_load do
-        Request.delete(delete_request.request_uri, delete_request.options)
+        Request.new(delete_request.request_uri, delete_request.options).run
       end
     end
 
