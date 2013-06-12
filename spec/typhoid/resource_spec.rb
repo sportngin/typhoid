@@ -106,7 +106,7 @@ describe Typhoid::Resource do
     end
 
     it "should update an object" do
-      update_response = Typhoeus::Response.new(:code => 200, :headers => "", :body => {"team_1_name" => "Bears", "id" => "1"}.to_json)
+      update_response = Typhoid::Response.new(:code => 200, :headers => "", :body => {"team_1_name" => "Bears", "id" => "1"}.to_json)
       typhoeus_stub(:put, "http://localhost:3000/games/1", update_response, hydra)
 
       game = Game.new("id" => 1, "team_1_name" => 'Tigers')
