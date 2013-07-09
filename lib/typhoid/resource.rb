@@ -62,6 +62,7 @@ module Typhoid
     end
 
     def save_request(method = nil)
+      method ||= save_http_method(method)
       (new_record?) ? create_request(method) : update_request(method)
     end
 

@@ -13,7 +13,7 @@ module Typhoid
     end
 
     def options
-     symbolize_keys({ method: http_method }.merge(request_options))
+      symbolize_keys({ method: http_method }.merge(request_options.reject { |_,value| value.nil? }))
     end
 
     def http_method
