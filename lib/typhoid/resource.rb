@@ -17,8 +17,7 @@ module Typhoid
     end
 
     def self.run(request)
-      method = request.http_method
-      build(request.klass, (Typhoeus::Request.send method, request.request_uri, request.options))
+      build(request.klass, (Request.new(request.request_uri, request.options).run))
     end
 
     def self.uri_join(*paths)
@@ -50,19 +49,21 @@ module Typhoid
     end
 
     def save(method = nil)
+      request = save_request(method)
       request_and_load do
-        Typhoeus::Request.send save_http_method(method), save_request.request_uri, save_request.options
+        Request.new(request.request_uri, request.options).run
       end
     end
 
     def destroy
       request_and_load do
-        Typhoeus::Request.delete(delete_request.request_uri, delete_request.options)
+        Request.new(delete_request.request_uri, delete_request.options).run
       end
     end
 
-    def save_request
-      (new_record?) ? create_request : update_request
+    def save_request(method = nil)
+      method ||= save_http_method(method)
+      (new_record?) ? create_request(method) : update_request(method)
     end
 
     def save_http_method(method = nil)
@@ -102,14 +103,17 @@ module Typhoid
     end
 
     def create_request(method = :post)
+      method ||= :post
       Typhoid::RequestBuilder.new(self.class, request_uri, :body => to_params.to_json, :method => method, :headers => {"Content-Type" => 'application/json'})
     end
 
     def update_request(method = :put)
+      method ||= :put
       Typhoid::RequestBuilder.new(self.class, request_uri, :body => to_params.to_json, :method => method, :headers => {"Content-Type" => 'application/json'})
     end
 
     def delete_request(method = :delete)
+      method ||= :delete
       Typhoid::RequestBuilder.new(self.class, request_uri, :method => method)
     end
   end
