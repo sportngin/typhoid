@@ -63,7 +63,7 @@ module Typhoid
                      source.options
                    else
                      ACCESSOR_OPTIONS.reduce({}) do |hash, key|
-                       hash[key] = source.send(key) if source.respond_to?(:key) && source.method(key).arity < 1
+                       hash[key] = source.send(key) if source.respond_to?(key) && source.method(key).arity < 1
                        hash
                      end
                    end
