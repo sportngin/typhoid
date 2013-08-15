@@ -55,7 +55,7 @@ module Typhoid
 
     # Need to force override, because Object#method
     def method
-      source.respond_to?(:method) && source.method || options[:method] || :get
+      options[:method] || :get
     end
 
     def options
