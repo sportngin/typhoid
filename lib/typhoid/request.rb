@@ -55,18 +55,18 @@ module Typhoid
 
     # Need to force override, because Object#method
     def method
-      source.respond_to?(:method) && source.method || options[:method] || :get
+      options[:method] || :get
     end
 
     def options
-      if source.respond_to?(:options)
-        source.options
-      else
-        ACCESSOR_OPTIONS.reduce({}) do |hash, key|
-          hash[key] = source.send(key) if source.respond_to?(:key)
-          hash
-        end
-      end
+      @options ||= if source.respond_to?(:options)
+                     source.options
+                   else
+                     ACCESSOR_OPTIONS.reduce({}) do |hash, key|
+                       hash[key] = source.send(key) if source.respond_to?(key) && source.class.instance_method(key).arity < 1
+                       hash
+                     end
+                   end
     end
   end
 end
