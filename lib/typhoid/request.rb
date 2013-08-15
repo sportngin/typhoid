@@ -59,14 +59,14 @@ module Typhoid
     end
 
     def options
-      if source.respond_to?(:options)
-        source.options
-      else
-        ACCESSOR_OPTIONS.reduce({}) do |hash, key|
-          hash[key] = source.send(key) if source.respond_to?(:key)
-          hash
-        end
-      end
+      @options ||= if source.respond_to?(:options)
+                     source.options
+                   else
+                     ACCESSOR_OPTIONS.reduce({}) do |hash, key|
+                       hash[key] = source.send(key) if source.respond_to?(:key) && source.method(key).arity < 1
+                       hash
+                     end
+                   end
     end
   end
 end
