@@ -26,7 +26,7 @@ Or install it yourself as:
 require 'typhoid'
 
 class Game < Typhoid::Resource
-  field :id           # What fields we want to deal with on a response/request
+  field :id
   field :team_1_name
   field :team_2_name
   field :start_time
@@ -39,6 +39,22 @@ class Game < Typhoid::Resource
   end
 end
 ```
+
+A `field` creates a accessor methods that can be mass-assigned:
+
+```ruby
+g = Game.new id: 1, team_1_name: "Team 1", start_time: Time.now
+
+g.id                # => 1
+g.team_1_name       # => "Team 1"
+g.team_2_name       # => nil
+g.start_time        # => #<Time: ...>
+
+g.team_2_name = "Team 2"
+g.team_2_name       # => "Team 2"
+```
+
+These fields will be set on request and will be
 
 ## Contributing
 
