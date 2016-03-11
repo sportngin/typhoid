@@ -20,5 +20,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'typhoeus', "~> 0.4"
 
   gem.add_development_dependency 'rspec'
+  gem.add_development_dependency 'rspec-rails'
   gem.add_development_dependency 'json_pure', [">= 1.4.1"]
 end
