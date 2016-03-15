@@ -152,7 +152,7 @@ describe Typhoid::Resource do
 
       bad_game = controller.instance_variable_get("@game")
       bad_game.team_1_name.should be_nil
-      bad_game.resource_exception.class.should be_true
+      expect(bad_game.resource_exception.class).to equal(Typhoid::ReadError)
     end
   end
 end

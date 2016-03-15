@@ -22,5 +22,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'rspec-rails'
   gem.add_development_dependency 'rspec-its'
+  gem.add_development_dependency 'pry-rails'
   gem.add_development_dependency 'json_pure', [">= 1.4.1"]
 end
