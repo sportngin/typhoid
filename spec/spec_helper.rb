@@ -7,6 +7,7 @@
 
 require 'json'
 require 'active_support/core_ext/object'
+require 'rspec/its'
 
 Dir["spec/support/**/*.rb"].each {|f| require "./#{f}"}
 
