@@ -1,6 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 require 'json'
 
+
 describe Typhoid::Multi do
   context "making multiple requests" do
     def new_typhoeus?
