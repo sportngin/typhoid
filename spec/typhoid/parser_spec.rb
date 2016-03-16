@@ -57,7 +57,7 @@ module Typhoid
         end
 
         it "has no body" do
-          expect(Parser.new(empty_body).parse).to be_nil
+          expect{Parser.new(empty_body).parse}.to_not raise_error
         end
       end
     end
