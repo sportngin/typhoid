@@ -11,7 +11,7 @@ module Typhoid
     end
 
     def parse
-      parsed_body
+      parsed_body if json_string.present?
     end
 
     def parsed_body

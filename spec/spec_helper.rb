@@ -6,8 +6,12 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require 'json'
+require 'active_support'
+require 'active_support/all'
+require 'rspec/its'
+require 'pry'
 
-Dir["spec/support/**/*.rb"].each {|f| require "./#{f}"} 
+Dir["spec/support/**/*.rb"].each {|f| require "./#{f}"}
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true

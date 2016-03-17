@@ -30,6 +30,8 @@ module Typhoid
     JSON
     }
 
+    let(:empty_body) {""}
+
     describe "class" do
       subject { Parser }
 
@@ -52,6 +54,10 @@ module Typhoid
 
         it "has an expected element" do
           subject.parse["result"]["type"].should == "orphan"
+        end
+
+        it "has no body" do
+          expect{Parser.new(empty_body).parse}.to_not raise_error
         end
       end
     end
