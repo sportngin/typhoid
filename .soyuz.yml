@@ -1,0 +1,13 @@
+defaults:
+  deploy_cmd: gem push *.gem
+  before_deploy_cmds:
+    - /usr/local/bin/op tag-release
+    - sed -i "" -e "s/\".*/\"$(git tag | sed s/v// | sort -n -t. -k1,1 -k2,2 -k3,3 | tail -1)\"/" lib/typhoid/version.rb
+    - git add  lib/typhoid/version.rb
+    - git commit -m "Version Bump" && git push
+    - gem build typhoid.gemspec
+  after_deploy_cmds:
+    - rm *.gem
+environments:
+  -
+    rubygems: {}
